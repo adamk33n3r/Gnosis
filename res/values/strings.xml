@@ -5,6 +5,7 @@
     <string name="main_title">Welcome to Gnosis</string>
     <string name="menu_settings">Settings</string>
     <string name="quiz_label">Quiz</string>
+    <string name="games_label">Games</string>
     <string name="about_label">About</string>
     <string name="bible_label">Bible</string>
     <string name="stats_label">Statistics</string>
