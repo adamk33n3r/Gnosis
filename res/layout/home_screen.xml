@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/gummi_red"
+    android:orientation="vertical"
+    android:padding="25dip"
+     android:layout_width="fill_parent"
+     android:layout_height="fill_parent"
+     android:layout_alignParentTop="true"
+     android:id="@+id/RelativeLayout01">
+
+   <TextView
+      android:text="@string/main_title"
+      android:textColor="#FFFFFF"
+      android:layout_alignParentTop="true"
+      android:gravity="center_horizontal"
+      android:typeface="normal"
+      android:layout_height="wrap_content"
+      android:layout_width="fill_parent"
+      android:layout_marginBottom="25dip"
+      android:textSize="30sp" />
+   
+ <Button
+      android:id="@+id/quiz_button"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/quiz_label"
+   	  android:gravity="center"
+   	  android:textSize="30sp" 
+   	  android:layout_marginBottom="5dp"
+   	  android:background="@drawable/red_button"/>
+   <Button
+      android:id="@+id/bible_button"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/bible_label"
+      android:textSize="30sp"
+      android:gravity="center"
+      android:layout_marginBottom="5dp"
+      android:background="@drawable/custom_button" />
+   <Button
+      android:id="@+id/stats_button"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/stats_label"
+      android:textSize="30sp"
+      android:gravity="center"
+      android:layout_marginBottom="5dp"
+      android:background="@drawable/custom_button" />
+   <Button
+      android:id="@+id/about_button"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/about_label"
+      android:textSize="30sp"
+      android:gravity="center"
+      android:background="@drawable/custom_button" />
+</LinearLayout>

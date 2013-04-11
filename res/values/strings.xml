@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Gnosis</string>
+    <string name="main_title">Welcome to Gnosis</string>
+    <string name="menu_settings">Settings</string>
+    <string name="quiz_label">Quiz</string>
+    <string name="about_label">About</string>
+    <string name="bible_label">Bible</string>
+    <string name="stats_label">Statistics</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="quiz_text">Quiz Background Music!</string>
+    <string name="title_activity_about">About</string>
+    <string name="about_text">\
+Gnosis is a Bible Trivia Application which tests comprehension of biblical knowledge.
+Create a profile, start a quiz, and track your progress of Bible understanding. You 
+can even play games as well! The more you play the more <b><i>Gnosis!</i></b></string>
+    <string name="title_activity_bible">Bible</string>
+    <string name="music_title">Music</string>
+    <string name="music_summary">Play Quiz Background Music</string>
+
+    <color name="gummi_red">#FC1501</color>
+
+    <string name="title_activity_quiz">Quiz</string>
+    <string name="title_activity_statistics">Statistics</string>
+    <string name="settings_label">Preferences</string>
+	<string name="settings_title">Gnosis settings</string>
+	<string name="settings_shortcut">s</string>
+
+</resources>

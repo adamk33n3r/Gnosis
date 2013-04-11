@@ -1,0 +1,4 @@
+Gnosis
+======
+
+Bible Trivia App
