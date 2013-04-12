@@ -29,5 +29,11 @@ can even play games as well! The more you play the more <b><i>Gnosis!</i></b></s
     <string name="settings_shortcut">s</string>
     <string name="title_activity_games">Games</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_frog_main">Frog</string>
+    <string name="frog_label">Frog</string>
+    <string name="frog_play_button">Play</string>
+    <string name="frog_scores_button">Scores</string>
+    <string name="frog_back_button">Back</string>
+    <string name="title_activity_game">Frog Game</string>
 
 </resources>

@@ -59,6 +59,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.waldk33n3r.android.gnosis.HomeScreen" />
         </activity>
+        <activity
+            android:name="org.waldk33n3r.android.gnosis.games.frog.Main"
+            android:label="@string/title_activity_frog_main"
+            android:parentActivityName="org.waldk33n3r.android.gnosis.games.Games" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.waldk33n3r.android.gnosis.games.Games" />
+        </activity>
+        <activity
+            android:name="org.waldk33n3r.android.gnosis.games.frog.Game"
+            android:label="@string/title_activity_game"
+            android:parentActivityName="org.waldk33n3r.android.gnosis.games.frog.Main" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.waldk33n3r.android.gnosis.games.frog.Main" />
+        </activity>
     </application>
 
 </manifest>
