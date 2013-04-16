@@ -1,5 +1,7 @@
 package org.waldk33n3r.android.gnosis.games.frog;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 import org.waldk33n3r.android.gnosis.R;
@@ -17,6 +19,8 @@ public class GameView extends View {
 	private Paint paint;
 
 	private Bitmap lilly;
+	
+	private ArrayList<LillyPad> lillies;
 
 	private Random rand;
 
@@ -25,6 +29,11 @@ public class GameView extends View {
 		paint = new Paint();
 		lilly = BitmapFactory.decodeResource(getResources(), R.drawable.lilypad);
 		rand = new Random();
+		
+		lillies = new ArrayList<LillyPad>();
+		lillies.add(new LillyPad(0, 0, 10, lilly));
+		lillies.add(new LillyPad(50, 50, 50, lilly));
+		
 	}
 
 	@Override
@@ -38,11 +47,16 @@ public class GameView extends View {
 			canvas.drawLine(i, 0, i, canvas.getHeight(), paint);
 			canvas.drawLine(0, i, canvas.getWidth(), i, paint);
 		}
-
+		
+		for(Iterator<LillyPad> it = lillies.iterator(); it.hasNext();)
+			it.next().draw(canvas);
+		
+		
+		/*
 		for (int x = 0; x + lilly.getWidth() < canvas.getWidth(); x += lilly.getWidth() + rand.nextInt(30) + 30)
-			for (int y = 0; y + lilly.getHeight() < canvas.getHeight(); y += lilly.getHeight() + rand.nextInt(30) + 30) {
+			for (int y = 0; y + lilly.getHeight() < canvas.getHeight(); y += lilly.getHeight() + rand.nextInt(30) + 30)
 				canvas.drawBitmap(lilly, x, y, paint);
-			}
+		*/
 		this.invalidate();
 
 	}
