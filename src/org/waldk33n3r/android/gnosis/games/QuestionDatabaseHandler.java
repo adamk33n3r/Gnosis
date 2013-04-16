@@ -1,6 +1,11 @@
 package org.waldk33n3r.android.gnosis.games;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -44,5 +49,96 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
  
         // Create tables again
         onCreate(db);
+	}
+	
+	// Adding new question
+	public void addQuestion(Question question) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.put(KEY_BODY, question.getBody());
+		values.put(KEY_ANSWER, question.getAnswer());
+		values.put(KEY_OPTION1, question.getOption1());
+		values.put(KEY_OPTION2, question.getOption2());
+		values.put(KEY_OPTION3, question.getOption3());
+		
+		db.insert(TABLE_QUESTIONS, null, values);
+		db.close();
+	}
+	 
+	// Getting single question
+	public Question getQuestion(int id) {
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.query(TABLE_QUESTIONS, new String[] { KEY_ID,
+	            KEY_BODY, KEY_ANSWER, KEY_OPTION1, KEY_OPTION2, KEY_OPTION3 }, KEY_ID + "=?",
+	            new String[] { String.valueOf(id) }, null, null, null, null);
+		if(cursor != null){
+			cursor.moveToFirst();
+		}
+		
+		Question question = new Question(Integer.parseInt(cursor.getString(0)), 
+				cursor.getString(1), cursor.getString(2), cursor.getString(3), 
+				cursor.getString(4), cursor.getString(5));
+		
+		return question;
+	}
+	 
+	// Getting All Questions as a List
+	public List<Question> getAllQuestions() {
+		List<Question> questionList = new ArrayList<Question>();
+		
+	    String selectQuery = "SELECT  * FROM " + TABLE_QUESTIONS;
+	 
+	    SQLiteDatabase db = this.getWritableDatabase();
+	    Cursor cursor = db.rawQuery(selectQuery, null);
+	 
+	    if (cursor.moveToFirst()) {
+	        do {
+	            Question question = new Question();
+	            question.setID(Integer.parseInt(cursor.getString(0)));
+	            question.setBody(cursor.getString(1));
+	            question.setAnswer(cursor.getString(2));
+	            question.setOption1(cursor.getString(3));
+	            question.setOption2(cursor.getString(4));
+	            question.setOption3(cursor.getString(5));
+
+	            questionList.add(question);
+	        } while (cursor.moveToNext());
+	    }
+	 
+	    return questionList;
+	}
+	 
+	// Getting question Count
+	public int getQuestionsCount() {
+		String questionQuery = "SELECT  * FROM " + TABLE_QUESTIONS;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(questionQuery, null);
+        cursor.close();
+ 
+        return cursor.getCount();
+	}
+	
+	// Updating single question
+	public int updateQuestion(Question question) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		 
+	    ContentValues values = new ContentValues();
+		values.put(KEY_BODY, question.getBody());
+		values.put(KEY_ANSWER, question.getAnswer());
+		values.put(KEY_OPTION1, question.getOption1());
+		values.put(KEY_OPTION2, question.getOption2());
+		values.put(KEY_OPTION3, question.getOption3());
+	 
+	    return db.update(TABLE_QUESTIONS, values, KEY_ID + " = ?",
+	            new String[] { String.valueOf(question.getID()) });
+	}
+	 
+	// Deleting single question
+	public void deleteQuestion(Question question) {
+		SQLiteDatabase db = this.getWritableDatabase();
+	    db.delete(TABLE_QUESTIONS, KEY_ID + " = ?",
+	            new String[] { String.valueOf(question.getID()) });
+	    db.close();
 	}
 }
