@@ -8,7 +8,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class Bible extends ListActivity {
-  public void onCreate(Bundle icicle) {
+  @Override
+	public void onCreate(Bundle icicle) {
     super.onCreate(icicle);
     String[] values = new String[] { "Genesis","Exodus","Leviticus","Numbers","Deuteronomy","Joshua",
     		"Judges","Ruth"};

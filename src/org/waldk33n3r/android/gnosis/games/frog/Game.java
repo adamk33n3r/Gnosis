@@ -1,16 +1,11 @@
 package org.waldk33n3r.android.gnosis.games.frog;
 
 import org.waldk33n3r.android.gnosis.R;
-import org.waldk33n3r.android.gnosis.R.layout;
-import org.waldk33n3r.android.gnosis.R.menu;
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
-import android.annotation.TargetApi;
-import android.os.Build;
 
 public class Game extends Activity {
 
@@ -18,16 +13,6 @@ public class Game extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(new GameView(this));
-	}
-
-	/**
-	 * Set up the {@link android.app.ActionBar}, if the API is available.
-	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void setupActionBar() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			getActionBar().setDisplayHomeAsUpEnabled(true);
-		}
 	}
 
 	@Override
