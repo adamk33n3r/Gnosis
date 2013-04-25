@@ -39,6 +39,7 @@ public class GameView extends View {
 		paint = new Paint();
 		lillyImg = BitmapFactory.decodeResource(getResources(), R.drawable.lilypad);
 		rand = new Random();
+		Log.e("DB","Getting handler");
 		db = new QuestionDatabaseHandler(getContext());
 		Log.e("Question count", "" + db.getQuestionsCount());
 		lillies = new ArrayList<LillyPad>();
@@ -124,7 +125,8 @@ public class GameView extends View {
 						case 3:
 							text = questions.get(1).getOption3();
 					}
-				}
+				}lillyCount++;
+				Log.e("adsfadsfasdf",lillyCount+" "+text);
 				lillies.add(new LillyPad(text, dir, x, y, size, size, lillyImg));
 			}
 		}
