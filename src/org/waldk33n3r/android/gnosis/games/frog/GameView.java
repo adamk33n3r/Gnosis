@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.Random;
 
 import org.waldk33n3r.android.gnosis.R;
+import org.waldk33n3r.android.gnosis.games.Question;
+import org.waldk33n3r.android.gnosis.games.QuestionDatabaseHandler;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -30,12 +32,15 @@ public class GameView extends View {
 
 	private String[] strings;
 	
+	QuestionDatabaseHandler db;
+	
 	public GameView(Context context) {
 		super(context);
 		paint = new Paint();
 		lilly = BitmapFactory.decodeResource(getResources(), R.drawable.lilypad);
 		rand = new Random();
-
+		db = new QuestionDatabaseHandler(getContext());
+		Log.e("Blargh",""+db.getQuestionsCount());
 		lillies = new ArrayList<LillyPad>();
 		init();
 		Timer timer = new Timer(100, true, new Executable() {
@@ -111,8 +116,8 @@ public class GameView extends View {
 		paint.setColor(Color.BLACK);
 		paint.setTextSize(36);
 		paint.setTextAlign(Align.CENTER);
-		for (int i = 0; i < strings.length; i++)
-			canvas.drawText(strings[i], canvas.getWidth() / 2, canvas.getHeight() / 4 + 30 * i, paint);
+		//for (int i = 0; i < strings.length; i++)
+			//canvas.drawText(strings[i], canvas.getWidth() / 2, canvas.getHeight() / 4 + 30 * i, paint);
 
 	}
 

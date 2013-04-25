@@ -8,6 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 	
@@ -36,8 +37,8 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		String CREATE_QUESTIONS_TABLE = "CREATE TABLE " + TABLE_QUESTIONS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_BODY + " TEXT,"
-                + KEY_ANSWER + " TEXT" + KEY_OPTION1 + " TEXT" + KEY_OPTION2 +
-                " TEXT" + KEY_OPTION3 + " TEXT" + ")";
+                + KEY_ANSWER + " TEXT," + KEY_OPTION1 + " TEXT," + KEY_OPTION2 +
+                " TEXT," + KEY_OPTION3 + " TEXT" + ")";
         db.execSQL(CREATE_QUESTIONS_TABLE);
 		
 	}
@@ -61,7 +62,7 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 		values.put(KEY_OPTION1, question.getOption1());
 		values.put(KEY_OPTION2, question.getOption2());
 		values.put(KEY_OPTION3, question.getOption3());
-		
+		Log.e("DB","Inserting a question");
 		db.insert(TABLE_QUESTIONS, null, values);
 		db.close();
 	}
@@ -114,9 +115,10 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 		String questionQuery = "SELECT  * FROM " + TABLE_QUESTIONS;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(questionQuery, null);
+        int count = cursor.getCount();
         cursor.close();
  
-        return cursor.getCount();
+        return count;
 	}
 	
 	// Updating single question
