@@ -3,12 +3,16 @@ package org.waldk33n3r.android.gnosis.games.frog;
 import org.waldk33n3r.android.gnosis.games.Entity;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.view.View;
 
 public class LillyPad extends Entity {
 	
 	
 	private int dir;
+	private String text;
+	private Paint paint;
 	
 	/**
 	 * LillyPad
@@ -19,9 +23,12 @@ public class LillyPad extends Entity {
 	 * @param height
 	 * @param lilly - Bitmap to draw
 	 */
-	public LillyPad(int flowdir, float x, float y, float width, float height, Bitmap lilly) {
+	public LillyPad(String question, int flowdir, float x, float y, float width, float height, Bitmap lilly) {
 		super(x, y, width, height, lilly);
 		this.dir = flowdir;
+		this.text = question;
+		this.paint = new Paint();
+		this.paint.setTextSize(36);
 	}
 	
 	/**
@@ -44,6 +51,16 @@ public class LillyPad extends Entity {
 	
 	public void moveLeft(View view, int dist) {
 		x = x - dist < -200/*width*/ ? view.getWidth() - dist : x - dist;
+	}
+	
+	public void setText(String text) {
+		this.text = text;
+	}
+	
+	@Override
+	public void draw(Canvas canvas) {
+		super.draw(canvas);
+		canvas.drawText(text, x, y, paint);
 	}
 	
 	

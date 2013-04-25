@@ -24,23 +24,23 @@ public class GameView extends View {
 
 	private Paint paint;
 
-	private Bitmap lilly;
+	private Bitmap lillyImg;
 
 	private ArrayList<LillyPad> lillies;
 
 	private Random rand;
 
 	private String[] strings;
-	
+
 	QuestionDatabaseHandler db;
-	
+
 	public GameView(Context context) {
 		super(context);
 		paint = new Paint();
-		lilly = BitmapFactory.decodeResource(getResources(), R.drawable.lilypad);
+		lillyImg = BitmapFactory.decodeResource(getResources(), R.drawable.lilypad);
 		rand = new Random();
 		db = new QuestionDatabaseHandler(getContext());
-		Log.e("Blargh",""+db.getQuestionsCount());
+		Log.e("Question count", "" + db.getQuestionsCount());
 		lillies = new ArrayList<LillyPad>();
 		init();
 		Timer timer = new Timer(100, true, new Executable() {
@@ -60,16 +60,28 @@ public class GameView extends View {
 	}
 
 	private void init() {
-		strings = new String[]{"Randomly generated","sizes (weighted)","and directions.","","Click a lilly pad to","make it disappear.","","Click the place again to","make it reappear"};
+		// strings = new
+		// String[]{"Randomly generated","sizes (weighted)","and directions.","","Click a lilly pad to","make it disappear.","","Click the place again to","make it reappear"};
 		int dir1 = rand.nextInt(2);
 		int dir2 = rand.nextInt(2);
 		int dir3 = rand.nextInt(2);
 		int dir4 = rand.nextInt(2);
-		for (int i = 0; i < rand.nextInt(40) + 20; i++) {
+		ArrayList<Question> questions = new ArrayList<Question>(8);
+		for (Question question : db.getAllQuestions()) {
+			questions.add(question);
+			if (questions.size() == 8)
+				break;
+		}
+		int lillyCount = 0;
+		while (lillies.size() < 8) {
+			// for (int i = 0; i < rand.nextInt(40) + 20; i++) { // Random
+			// amount
 			int size = rand.nextInt(3) + 1;
 			size = size == 3 ? 200 : 100;
 			float x = (rand.nextInt(10) + 1) * 50;
 			float y = rand.nextInt(4) * 200 + 20;
+
+			// Check if this lillypad intersects any others
 			boolean intersects = false;
 			for (Iterator<LillyPad> it = lillies.iterator(); it.hasNext();) {
 				LillyPad lilly = it.next();
@@ -89,7 +101,31 @@ public class GameView extends View {
 					dir = dir3;
 				else
 					dir = dir4;
-				lillies.add(new LillyPad(dir/* rand.nextInt(2) */, x, y, size, size, lilly));
+				String text = null;
+				if (lillyCount < 4) {
+					switch (lillyCount) {
+						case 0:
+							text = questions.get(0).getAnswer();
+						case 1:
+							text = questions.get(0).getOption1();
+						case 2:
+							text = questions.get(0).getOption2();
+						case 3:
+							text = questions.get(0).getOption3();
+					}
+				} else {
+					switch (lillyCount) {
+						case 0:
+							text = questions.get(1).getAnswer();
+						case 1:
+							text = questions.get(1).getOption1();
+						case 2:
+							text = questions.get(1).getOption2();
+						case 3:
+							text = questions.get(1).getOption3();
+					}
+				}
+				lillies.add(new LillyPad(text, dir, x, y, size, size, lillyImg));
 			}
 		}
 	}
@@ -102,7 +138,7 @@ public class GameView extends View {
 		canvas.drawPaint(paint);
 
 		paint.setColor(Color.RED);
-		
+
 		for (int i = 0; i <= canvas.getHeight(); i += 10) {
 			canvas.drawLine(i, 0, i, canvas.getHeight(), paint);
 			canvas.drawLine(0, i, canvas.getWidth(), i, paint);
@@ -116,8 +152,9 @@ public class GameView extends View {
 		paint.setColor(Color.BLACK);
 		paint.setTextSize(36);
 		paint.setTextAlign(Align.CENTER);
-		//for (int i = 0; i < strings.length; i++)
-			//canvas.drawText(strings[i], canvas.getWidth() / 2, canvas.getHeight() / 4 + 30 * i, paint);
+		// for (int i = 0; i < strings.length; i++)
+		// canvas.drawText(strings[i], canvas.getWidth() / 2, canvas.getHeight()
+		// / 4 + 30 * i, paint);
 
 	}
 
