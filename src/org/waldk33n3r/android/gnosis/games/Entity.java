@@ -40,7 +40,7 @@ public abstract class Entity {
 	}
 
 	public void draw(Canvas canvas) {
-		if (this.visible)
+//		if (this.visible)
 			canvas.drawBitmap(Bitmap.createScaledBitmap(bitmap, (int) width, (int) height, true), x, y, new Paint());
 	}
 

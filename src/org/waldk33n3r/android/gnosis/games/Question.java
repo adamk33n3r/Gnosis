@@ -1,5 +1,7 @@
 package org.waldk33n3r.android.gnosis.games;
 
+import android.util.Log;
+
 public class Question {
 	int _id;
  	String _body;
@@ -78,5 +80,10 @@ public class Question {
 
  	public void setOption3(String opt){
  		this._option3 = opt;
+ 	}
+ 	
+ 	@Override
+	public String toString() {
+ 		return String.format("%s: 1. %s, 2. %s, 3. %s, 4. %s",this._body, this._answer, this._option1, this._option2, this._option3);
  	}
 }

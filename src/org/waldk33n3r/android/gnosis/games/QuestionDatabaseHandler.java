@@ -41,9 +41,9 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 				+ KEY_ANSWER + " TEXT," + KEY_OPTION1 + " TEXT," + KEY_OPTION2 + " TEXT," + KEY_OPTION3 + " TEXT" + ")";
 		db.execSQL(CREATE_QUESTIONS_TABLE);
 
-		Log.e("DB", "Adding first question");
+//		Log.e("DB", "Adding first question");
 		addQuestion(db, new Question("Who was Jesus mother?", "Mary", "Martha", "Ruth", "Diana"));
-		Log.e("DB", "Created db successfully");
+//		Log.e("DB", "Created db successfully");
 		addQuestion(db, new Question("What was the name of the garden where Adam and Eve lived?", "Garden of Eden", "Garden of the Gods",
 				"Garden of Gethsemane", "Hanging Gardens"));
 		addQuestion(db, new Question("With what food did Jesus feed 5,000 people?", "Loaves of bread and fishes", "Bread and Wine",
@@ -105,7 +105,7 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
 		// Drop older table if existed
-		Log.e("DB","onUpgrade called");
+//		Log.e("DB","onUpgrade called");
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUESTIONS);
 
 		// Create tables again
@@ -114,7 +114,7 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 
 	// Adding new question
 	public void addQuestion(SQLiteDatabase db, Question question) {
-		Log.e("DB", "Getting db");
+//		Log.e("DB", "Getting db");
 		
 		/*SQLiteDatabase db = null;
 		try {
@@ -125,7 +125,7 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 		} finally {
 			Log.e("DB","Could not open a database finally");
 		}*/
-		Log.e("DB", "after db");
+//		Log.e("DB", "after db");
 
 		ContentValues values = new ContentValues();
 		values.put(KEY_BODY, question.getBody());
@@ -133,9 +133,9 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 		values.put(KEY_OPTION1, question.getOption1());
 		values.put(KEY_OPTION2, question.getOption2());
 		values.put(KEY_OPTION3, question.getOption3());
-		Log.e("DB", "Inserting a question");
+		System.out.println(question);
+//		Log.e("DB", "Inserting a question");
 		db.insert(TABLE_QUESTIONS, null, values);
-		db.close();
 	}
 
 	// Getting single question
@@ -165,12 +165,14 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 		if (cursor.moveToFirst()) {
 			do {
 				Question question = new Question();
+//				Log.e("DB",cursor.getString(2));
 				question.setID(Integer.parseInt(cursor.getString(0)));
 				question.setBody(cursor.getString(1));
 				question.setAnswer(cursor.getString(2));
 				question.setOption1(cursor.getString(3));
 				question.setOption2(cursor.getString(4));
 				question.setOption3(cursor.getString(5));
+//				Log.e("Question",""+question);
 
 				questionList.add(question);
 			} while (cursor.moveToNext());

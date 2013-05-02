@@ -39,9 +39,9 @@ public class GameView extends View {
 		paint = new Paint();
 		lillyImg = BitmapFactory.decodeResource(getResources(), R.drawable.lilypad);
 		rand = new Random();
-		Log.e("DB","Getting handler");
+//		Log.e("DB","Getting handler");
 		db = new QuestionDatabaseHandler(getContext());
-		Log.e("Question count", "" + db.getQuestionsCount());
+//		Log.e("Question count", "" + db.getQuestionsCount());
 		lillies = new ArrayList<LillyPad>();
 		init();
 		Timer timer = new Timer(100, true, new Executable() {
@@ -73,6 +73,7 @@ public class GameView extends View {
 			if (questions.size() == 8)
 				break;
 		}
+//		Log.e("Question List",questions.toString());
 		int lillyCount = 0;
 		while (lillies.size() < 8) {
 			// for (int i = 0; i < rand.nextInt(40) + 20; i++) { // Random
@@ -107,26 +108,36 @@ public class GameView extends View {
 					switch (lillyCount) {
 						case 0:
 							text = questions.get(0).getAnswer();
+							break;
 						case 1:
 							text = questions.get(0).getOption1();
+							break;
 						case 2:
 							text = questions.get(0).getOption2();
+							break;
 						case 3:
 							text = questions.get(0).getOption3();
+							break;
 					}
 				} else {
 					switch (lillyCount) {
-						case 0:
+						case 4:
 							text = questions.get(1).getAnswer();
-						case 1:
+							break;
+						case 5:
 							text = questions.get(1).getOption1();
-						case 2:
+							break;
+						case 6:
 							text = questions.get(1).getOption2();
-						case 3:
+							break;
+						case 7:
 							text = questions.get(1).getOption3();
+							break;
 					}
-				}lillyCount++;
-				Log.e("adsfadsfasdf",lillyCount+" "+text);
+				}
+				
+				lillyCount++;
+//				Log.e("adsfadsfasdf",lillyCount+" "+text);
 				lillies.add(new LillyPad(text, dir, x, y, size, size, lillyImg));
 			}
 		}
@@ -141,10 +152,10 @@ public class GameView extends View {
 
 		paint.setColor(Color.RED);
 
-		for (int i = 0; i <= canvas.getHeight(); i += 10) {
-			canvas.drawLine(i, 0, i, canvas.getHeight(), paint);
-			canvas.drawLine(0, i, canvas.getWidth(), i, paint);
-		}
+//		for (int i = 0; i <= canvas.getHeight(); i += 10) {
+//			canvas.drawLine(i, 0, i, canvas.getHeight(), paint);
+//			canvas.drawLine(0, i, canvas.getWidth(), i, paint);
+//		}
 
 		for (Iterator<LillyPad> it = lillies.iterator(); it.hasNext();) {
 			LillyPad lilly = it.next();
