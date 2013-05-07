@@ -70,10 +70,10 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 				"One-Hundred"));
 		addQuestion(db, new Question("What was special about Jesus' mother?", "She was a virgin", "She was an only Child",
 				"She was without sin", "She was a Gentile"));
-		addQuestion(db, new Question("Who gave gifts to Jesus when he was a young child?", "magi", "King Herod", "Pontius Pilate", "pharisees"));
+		addQuestion(db, new Question("Who gave gifts to Jesus when he was a young child?", "Magi", "King Herod", "Pontius Pilate", "pharisees"));
 		addQuestion(db, new Question("What happened to Jonah after he was thrown overboard?", "He was swallowed by a great fish",
 				"He swam to Tarsus", "He drowned", "He was rescued by pirates"));
-		addQuestion(db, new Question("In whose image was man created?", "God's", "Monkey", "Fish", "his own"));
+		addQuestion(db, new Question("In whose image was man created?", "God's", "Monkey", "Fish", "His own"));
 		addQuestion(db, new Question("How many apostles did Jesus choose?", "Twelve", "Three", "Seven", "Forty"));
 		addQuestion(db, new Question("What are the wages of sin?", "Death", "Prison", "30 pieces of silver", "nothing"));
 		addQuestion(db, new Question("Who is the first mother mentioned in the Bible?", "Eve", "Noah's wife", "Sarah", "Tamar"));

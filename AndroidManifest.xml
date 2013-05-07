@@ -71,6 +71,7 @@
         </activity>
         <activity
             android:name="org.waldk33n3r.android.gnosis.games.frog.Game"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:label="@string/title_activity_game"
             android:parentActivityName="org.waldk33n3r.android.gnosis.games.frog.Main"
             android:screenOrientation="portrait" >

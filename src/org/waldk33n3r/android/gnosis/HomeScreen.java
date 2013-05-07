@@ -1,7 +1,5 @@
 package org.waldk33n3r.android.gnosis;
 
-import java.io.IOException;
-
 import org.waldk33n3r.android.gnosis.bible.Bible;
 import org.waldk33n3r.android.gnosis.games.Games;
 
