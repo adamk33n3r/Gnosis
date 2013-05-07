@@ -19,16 +19,6 @@
         android:typeface="normal" />
 
     <Button
-        android:id="@+id/quiz_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/red_button"
-        android:gravity="center"
-        android:text="@string/quiz_label"
-        android:textSize="30sp" />
-
-    <Button
         android:id="@+id/game_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -46,16 +36,6 @@
         android:background="@drawable/custom_button"
         android:gravity="center"
         android:text="@string/bible_label"
-        android:textSize="30sp" />
-
-    <Button
-        android:id="@+id/stats_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/custom_button"
-        android:gravity="center"
-        android:text="@string/stats_label"
         android:textSize="30sp" />
 
     <Button

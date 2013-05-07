@@ -28,7 +28,7 @@
             android:theme="@android:style/Theme.Dialog" >
         </activity>
         <activity
-            android:name="org.waldk33n3r.android.gnosis.Bible"
+            android:name="org.waldk33n3r.android.gnosis.bible.Bible"
             android:label="@string/title_activity_bible" >
         </activity>
         <activity

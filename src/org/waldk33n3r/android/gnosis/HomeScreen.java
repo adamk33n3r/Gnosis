@@ -1,5 +1,8 @@
 package org.waldk33n3r.android.gnosis;
 
+import java.io.IOException;
+
+import org.waldk33n3r.android.gnosis.bible.Bible;
 import org.waldk33n3r.android.gnosis.games.Games;
 
 import android.app.Activity;
@@ -19,13 +22,9 @@ public class HomeScreen extends Activity implements OnClickListener {
 		setContentView(R.layout.home_screen);
 
 		// Add event listener to buttons here
-		View quizButton = this.findViewById(R.id.quiz_button);
-		quizButton.setOnClickListener(this);
 		this.findViewById(R.id.game_button).setOnClickListener(this);
 		View bibleButton = this.findViewById(R.id.bible_button);
 		bibleButton.setOnClickListener(this);
-		View statsButton = this.findViewById(R.id.stats_button);
-		statsButton.setOnClickListener(this);
 		View aboutButton = this.findViewById(R.id.about_button);
 		aboutButton.setOnClickListener(this);
 	}
@@ -33,9 +32,6 @@ public class HomeScreen extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-			case R.id.quiz_button:
-				startActivity(new Intent(this, QuizMenu.class));
-				break;
 			case R.id.game_button:
 				startActivity(new Intent(this, Games.class));
 				break;
@@ -61,7 +57,7 @@ public class HomeScreen extends Activity implements OnClickListener {
 		super.onCreateOptionsMenu(menu);
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu, menu);
-		return true;
+		return true; 
 	}
 
 	@Override
