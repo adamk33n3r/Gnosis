@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.text.Layout.Alignment;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.util.Log;
 import android.view.View;
 
 public class LillyPad extends Entity {
@@ -39,9 +40,9 @@ public class LillyPad extends Entity {
 		this.dir = flowdir;
 		this.text = text;
 		this.paint = new TextPaint();
-		this.paint.setTextSize(36 / (text.length() > 12 ? 2 : 1));
+		this.paint.setTextSize(30 * (width / 75) / (text.length() > 4 ? 2 : 1));
 		this.paint.setColor(Color.YELLOW);
-		layout = new StaticLayout(this.text, 0, this.text.length(), paint, (int) 100, Alignment.ALIGN_CENTER, 1f, 1f, false);
+		layout = new StaticLayout(this.text, 0, this.text.length(), paint, (int) width, Alignment.ALIGN_CENTER, 1f, 1f, false);
 		this.textVisible = true;
 	}
 
@@ -70,10 +71,10 @@ public class LillyPad extends Entity {
 
 	public void setText(String text) {
 		this.text = text;
-		this.paint.setTextSize(36 / (text.length() > 12 ? 2 : 1));
+		this.paint.setTextSize(30 * (width / 75) / (text.length() > 4 ? 2 : 1));
 		if (width > 100)
 			this.paint.setTextSize(36);
-		layout = new StaticLayout(this.text, paint, (int) width - 100, Alignment.ALIGN_CENTER, 1f, 1f, false);
+		layout = new StaticLayout(this.text, paint, (int) width-50, Alignment.ALIGN_CENTER, 1f, 1f, false);
 	}
 
 	public boolean isTextVisible() {
@@ -89,13 +90,13 @@ public class LillyPad extends Entity {
 		super.draw(canvas);
 		if (this.isTextVisible()) {
 			if (width > 100) {
-				canvas.translate(x + 50, y + 30);
+				canvas.translate(x + 40, y + 30);
 				layout.draw(canvas);
-				canvas.translate(-x - 50, -y - 30);
+				canvas.translate(-x - 40, -y - 30);
 			} else {
-				canvas.translate(x, y);
+				canvas.translate(x, y + 30 * (1 / layout.getLineCount()));
 				layout.draw(canvas);
-				canvas.translate(-x, -y);
+				canvas.translate(-x, -y - 30 * (1 / layout.getLineCount()));
 			}
 		}
 	}

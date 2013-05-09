@@ -1,6 +1,7 @@
 package org.waldk33n3r.android.gnosis.games.frog;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class LillyRow {
 	public ArrayList<LillyPad> lillies = new ArrayList<LillyPad>(4);
@@ -16,6 +17,7 @@ public class LillyRow {
 			else
 				break;
 		}
+		Collections.shuffle(lillies);
 	}
 	
 	public boolean add(LillyPad pad) {

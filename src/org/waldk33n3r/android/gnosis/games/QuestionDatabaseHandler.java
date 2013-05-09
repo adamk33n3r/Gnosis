@@ -70,18 +70,18 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 				"One-Hundred"));
 		addQuestion(db, new Question("What was special about Jesus' mother?", "She was a virgin", "She was an only Child",
 				"She was without sin", "She was a Gentile"));
-		addQuestion(db, new Question("Who gave gifts to Jesus when he was a young child?", "Magi", "King Herod", "Pontius Pilate", "pharisees"));
+		addQuestion(db, new Question("Who gave gifts to Jesus when he was a young child?", "Magi", "King Herod", "Pontius Pilate", "Pharisees"));
 		addQuestion(db, new Question("What happened to Jonah after he was thrown overboard?", "He was swallowed by a great fish",
 				"He swam to Tarsus", "He drowned", "He was rescued by pirates"));
 		addQuestion(db, new Question("In whose image was man created?", "God's", "Monkey", "Fish", "His own"));
 		addQuestion(db, new Question("How many apostles did Jesus choose?", "Twelve", "Three", "Seven", "Forty"));
-		addQuestion(db, new Question("What are the wages of sin?", "Death", "Prison", "30 pieces of silver", "nothing"));
+		addQuestion(db, new Question("What are the wages of sin?", "Death", "Prison", "30 pieces of silver", "Nothing"));
 		addQuestion(db, new Question("Who is the first mother mentioned in the Bible?", "Eve", "Noah's wife", "Sarah", "Tamar"));
 		addQuestion(db, new Question("Who else, other than the wise men, came to visit Jesus when he was a small child?", "Shepherds",
 				"King Herod", "Pontius Pilate", "pharisees"));
 		addQuestion(db, new Question("Who lied when he was asked to reveal the source of his great strength?", "Samson", "Gideon ", "David",
 				"Eli"));
-		addQuestion(db, new Question("What was the name of the man Jesus' mother was engaged to at the time she became pregnant?", "Joseph",
+		addQuestion(db, new Question("Who was Jesus' mother engaged to at the time she became pregnant?", "Joseph",
 				"Joshua", "Josiah", "Job"));
 		addQuestion(db, new Question("Which book of the Bible records many of the hymns David wrote?", "Psalms", "Proverbs", "Samuel I",
 				"Kings I"));
@@ -100,6 +100,7 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 		addQuestion(db, new Question("Which of the gospels appears last in the Bible?", "John", "Matthew", "Mark", "Luke"));
 		addQuestion(db, new Question("What is the only sin that cannot be forgiven?", "Blasphemy against the Holy Spirit", "Murder",
 				"Adultery", "Suicide"));
+		db.close();
 	}
 
 	@Override
@@ -158,8 +159,7 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 		List<Question> questionList = new ArrayList<Question>();
 
 		String selectQuery = "SELECT  * FROM " + TABLE_QUESTIONS;
-
-		SQLiteDatabase db = this.getWritableDatabase();
+		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
 		if (cursor.moveToFirst()) {
@@ -177,7 +177,7 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 				questionList.add(question);
 			} while (cursor.moveToNext());
 		}
-
+		db.close();
 		return questionList;
 	}
 
