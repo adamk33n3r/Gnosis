@@ -1,7 +1,7 @@
 package org.waldk33n3r.android.gnosis;
 
 import org.waldk33n3r.android.gnosis.bible.Bible;
-import org.waldk33n3r.android.gnosis.games.Games;
+import org.waldk33n3r.android.gnosis.games.frog.Main;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,9 +9,6 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 public class HomeScreen extends Activity implements OnClickListener {
 	@Override
@@ -20,7 +17,7 @@ public class HomeScreen extends Activity implements OnClickListener {
 		setContentView(R.layout.home_screen);
 
 		// Add event listener to buttons here
-		this.findViewById(R.id.game_button).setOnClickListener(this);
+		this.findViewById(R.id.frog_button).setOnClickListener(this);
 		View bibleButton = this.findViewById(R.id.bible_button);
 		bibleButton.setOnClickListener(this);
 		View aboutButton = this.findViewById(R.id.about_button);
@@ -30,8 +27,8 @@ public class HomeScreen extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-			case R.id.game_button:
-				startActivity(new Intent(this, Games.class));
+			case R.id.frog_button:
+				startActivity(new Intent(this, Main.class));
 				break;
 			case R.id.bible_button:
 				startActivity(new Intent(this, Bible.class));
@@ -48,24 +45,6 @@ public class HomeScreen extends Activity implements OnClickListener {
 				Log.e("Activity", "Ending new activity");
 				break;
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu, menu);
-		return true; 
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.settings:
-				startActivity(new Intent(this, Settings.class));
-				return true;
-		}
-		return false;
 	}
 }
 

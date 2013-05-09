@@ -1,7 +1,7 @@
 package org.waldk33n3r.android.gnosis.games.frog;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.Random;
 
 import org.waldk33n3r.android.gnosis.R;
@@ -14,12 +14,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Align;
 import android.graphics.RectF;
 import android.text.StaticLayout;
 import android.text.Layout.Alignment;
 import android.text.TextPaint;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,6 +33,7 @@ public class GameView extends View {
 	private Bitmap frog;
 	private Bitmap frogJump;
 	private Bitmap log;
+	private Bitmap heart;
 
 	private enum FrogState {
 		SIT, JUMP
@@ -57,6 +56,7 @@ public class GameView extends View {
 	private int qNum;
 	private int y;
 	private int curLevel;
+	private int lives = 3;
 	private Question curQ;
 	ArrayList<Question> questions;
 
@@ -65,7 +65,7 @@ public class GameView extends View {
 	QuestionDatabaseHandler db;
 
 	Display display;
-	private boolean nextScreen ;
+	private boolean nextScreen;
 
 	public GameView(Context context) {
 		super(context);
@@ -75,44 +75,49 @@ public class GameView extends View {
 		textPaint = new TextPaint();
 		textPaint.setColor(Color.YELLOW);
 		lillyImg = BitmapFactory.decodeResource(getResources(), R.drawable.lily_pad2_trans);
-//		lillyImg = Bitmap.createScaledBitmap(tmp, (int) (tmp.getWidth() * ((float) display.getWidth() / 300)), (int) (tmp.getHeight() * ((float) display.getHeight() / 1200)), true);
-		frog = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.sitting_frog_trans), 100, 100, true);
+		// lillyImg = Bitmap.createScaledBitmap(tmp, (int) (tmp.getWidth() *
+		// ((float) display.getWidth() / 300)), (int) (tmp.getHeight() *
+		// ((float) display.getHeight() / 1200)), true);
+		int fsize = (int) (100 * ((float) display.getHeight() / 1200));
+		frog = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.sitting_frog_trans), fsize, fsize, true);
 		frogJump = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.jumping_frog_trans), 100, 120, true);
 		Bitmap tmp = BitmapFactory.decodeResource(getResources(), R.drawable.log_trans);
-		Log.w("dafdsF",display.getWidth()+" " + lillyImg.getWidth());
-		log = Bitmap.createScaledBitmap(tmp, display.getWidth(), (int) (tmp.getHeight() * ((float)display.getHeight()/ 1200)), true);
+		log = Bitmap.createScaledBitmap(tmp, display.getWidth(), (int) (tmp.getHeight() * ((float) display.getHeight() / 1200)), true);
+		tmp = BitmapFactory.decodeResource(getResources(), R.drawable.heart);
+		heart = Bitmap.createScaledBitmap(tmp, 30, 30, true);
 		rand = new Random();
 		// Log.e("DB","Getting handler");
 		db = new QuestionDatabaseHandler(getContext());
 		// Log.e("Question count", "" + db.getQuestionsCount());
 		lillies = new ArrayList<LillyPad>();
 		init();
-//		Timer timer = new Timer(10, true, new Executable() {
-//
-//			@Override
-//			public void exec(Object... obj) {
-//				((View) obj[0]).post(new Runnable() {
-//					@Override
-//					public void run() {
-//						invalidate();
-//					}
-//				});
-//			}
-//
-//		}, this);
+		// Timer timer = new Timer(10, true, new Executable() {
+		//
+		// @Override
+		// public void exec(Object... obj) {
+		// ((View) obj[0]).post(new Runnable() {
+		// @Override
+		// public void run() {
+		// invalidate();
+		// }
+		// });
+		// }
+		//
+		// }, this);
 		// timer.start();
 	}
 
 	private void init() {
 		questions = new ArrayList<Question>();
 		startLilly = new LillyPad("", 0, 0, (display.getWidth() - frog.getWidth()) / 2, (display.getHeight() - log.getHeight())
-					+ log.getHeight() / 2 - frog.getHeight() / 2, 100, 100, -1, lillyImg);
+				+ log.getHeight() / 2 - frog.getHeight() / 2, 100, 100, -1, lillyImg);
 		frogLoc = startLilly;
 		logLilly = new LillyPad("", 0, 0, 0, 0, display.getWidth(), 150, 5, lillyImg);
 		logLilly.setVisible(false);
 		for (Question question : db.getAllQuestions()) {
 			questions.add(question);
 		}
+		Collections.shuffle(questions, rand);
 		build();
 	}
 
@@ -137,15 +142,15 @@ public class GameView extends View {
 			field = new LillyField();
 			int dx = display.getWidth() / 4;
 			int x = 0;
-			int y = display.getHeight() - 250;
-			int speed, size = (int) (100 * ((float)display.getWidth() / 800));
+			int speed, size = (int) (100 * ((float) display.getWidth() / 800));
+			int y = display.getHeight() - log.getHeight() - size;
 			for (int i = 0; i < dirs.length; i++) {
-				speed = rand.nextInt(8) + 2;
+				speed = rand.nextInt(6) + 2;
 				field.add(new LillyRow(new LillyPad(cur.getAnswer(), speed, dirs[i], x + rand.nextInt(100), y, size, size, i, lillyImg),
-						new LillyPad(cur.getOption1(), speed, dirs[i], x + dx + rand.nextInt(100), y, size, size, i, lillyImg), new LillyPad(
-								cur.getOption2(), speed, dirs[i], x + dx * 2 + rand.nextInt(100), y, size, size, i, lillyImg), new LillyPad(
-								cur.getOption3(), speed, dirs[i], x + dx * 3 + rand.nextInt(100), y, size, size, i, lillyImg)));
-				y -= 200;
+						new LillyPad(cur.getOption1(), speed, dirs[i], x + dx + rand.nextInt(100), y, size, size, i, lillyImg),
+						new LillyPad(cur.getOption2(), speed, dirs[i], x + dx * 2 + rand.nextInt(100), y, size, size, i, lillyImg),
+						new LillyPad(cur.getOption3(), speed, dirs[i], x + dx * 3 + rand.nextInt(100), y, size, size, i, lillyImg)));
+				y -= size * 2;
 				cur = questions.get(qNum + i + 1);
 				x = rand.nextInt(display.getWidth() - 100);
 			}
@@ -159,8 +164,8 @@ public class GameView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		if(nextScreen)
-			y+=30;
+		if (nextScreen)
+			y += 30;
 		if (y > display.getHeight() - log.getHeight()) {
 			nextScreen = false;
 			y = 0;
@@ -194,6 +199,11 @@ public class GameView extends View {
 		// Draw frog
 		canvas.drawBitmap(curFrogState == FrogState.SIT ? frog : frogJump, frogLoc.x + frogLoc.width / 2 - frog.getWidth() / 2, frogLoc.y,
 				null);
+		paint.setTextSize(36);
+		canvas.drawText("Level: " + (curLevel + 1), 60, display.getHeight() - log.getHeight() / 2, paint);
+		canvas.drawText("Lives: " /*+ lives*/, 60, display.getHeight() - log.getHeight() / 2 + 40, paint);
+		for (int i=0;i< lives;i++)
+			canvas.drawBitmap(heart, 150 + i * 30, display.getHeight() - log.getHeight() / 2 + 15, paint);
 		this.invalidate();
 
 	}
@@ -206,14 +216,21 @@ public class GameView extends View {
 			for (LillyRow row : field.rows)
 				for (LillyPad lilly : row.lillies) {
 					if (new RectF(lilly.getRectF()).contains(event.getX(), event.getY())) {
-//						Log.w("Touch Event", "Lilly pad touched");
+						// Log.w("Touch Event", "Lilly pad touched");
 						if (lilly.inRow(qNum - (5 * curLevel + 1))) {
 							if (curQ.getAnswer() != lilly.text) {
 								lilly.setVisible(false);
 								lilly.setTextVisible(false);
-								Toast.makeText(getContext(), "You perished in the depths", Toast.LENGTH_SHORT).show();
+								lives--;
 								frogLoc = startLilly;
 								field = null;
+								if (lives == 0) {
+									qNum = 0;
+									curLevel = 0;
+									lives = 3;
+									Toast.makeText(getContext(), "You lost all of your lives. Starting over.", Toast.LENGTH_SHORT).show();
+								} else
+									Toast.makeText(getContext(), "You perished in the depths.", Toast.LENGTH_SHORT).show();
 							} else
 								frogLoc = lilly;
 							build();
@@ -226,6 +243,7 @@ public class GameView extends View {
 				if (new RectF(logLilly.getRectF()).contains(event.getX(), event.getY())) {
 					frogLoc = logLilly;
 					nextScreen = true;
+					lives++;
 				}
 			}
 		}
