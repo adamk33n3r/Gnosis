@@ -35,5 +35,6 @@ can even play games as well! The more you play the more <b><i>Gnosis!</i></b></s
     <string name="frog_scores_button">Scores</string>
     <string name="frog_back_button">Back</string>
     <string name="title_activity_game">Frog Game</string>
+    <string name="title_activity_bible_chapters">BibleChapters</string>
 
 </resources>

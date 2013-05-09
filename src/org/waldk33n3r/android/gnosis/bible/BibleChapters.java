@@ -31,6 +31,12 @@ public class BibleChapters extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
+		String [] junk = {"junk","stuff"};
+		if(position == 0){
+			adapter = new ArrayAdapter<String>(this,
+					android.R.layout.simple_list_item_1, gen1verses);
+			setListAdapter(adapter);
+		}
 		/*String[] allChapters = new String[allBooksChapters[position]];
 		for(int i=0;i<allChapters.length;i++){
 			allChapters[i] = "Chapter " + String.valueOf(i+1);
