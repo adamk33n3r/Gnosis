@@ -53,4 +53,8 @@ public class Book {
  		return this._chapters;
  	}
  	
+ 	public void setChapters(ArrayList<Chapter> chapters){
+ 		this._chapters = chapters;
+ 	}
+ 	
 }
