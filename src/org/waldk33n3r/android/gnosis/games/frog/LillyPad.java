@@ -17,6 +17,8 @@ public class LillyPad extends Entity {
 	private TextPaint paint;
 	private StaticLayout layout;
 	String text;
+	private int rowNum;
+	int speed;
 
 	/**
 	 * LillyPad
@@ -30,8 +32,10 @@ public class LillyPad extends Entity {
 	 * @param lilly
 	 *            - Bitmap to draw
 	 */
-	public LillyPad(String text, int flowdir, float x, float y, float width, float height, Bitmap lilly) {
+	public LillyPad(String text, int speed, int flowdir, float x, float y, float width, float height, int rowNum, Bitmap lilly) {
 		super(x, y, width, height, lilly);
+		this.rowNum = rowNum;
+		this.speed = speed;
 		this.dir = flowdir;
 		this.text = text;
 		this.paint = new TextPaint();
@@ -57,23 +61,25 @@ public class LillyPad extends Entity {
 
 	public void moveRight(View view, int dist) {
 		float newPos = (x + dist) % view.getWidth();
-		x = newPos < x ? newPos - 200/* width */: newPos;
+		x = newPos < x ? newPos - 100/* width */: newPos;
 	}
 
 	public void moveLeft(View view, int dist) {
-		x = x - dist < -200/* width */? view.getWidth() - dist : x - dist;
+		x = x - dist < -100/* width */? view.getWidth() - dist : x - dist;
 	}
 
 	public void setText(String text) {
 		this.text = text;
 		this.paint.setTextSize(36 / (text.length() > 12 ? 2 : 1));
-		layout = new StaticLayout(this.text, 0, this.text.length(), paint, (int) 100, Alignment.ALIGN_CENTER, 1f, 1f, false);
+		if (width > 100)
+			this.paint.setTextSize(36);
+		layout = new StaticLayout(this.text, paint, (int) width - 100, Alignment.ALIGN_CENTER, 1f, 1f, false);
 	}
-	
+
 	public boolean isTextVisible() {
 		return textVisible;
 	}
-	
+
 	public void setTextVisible(boolean flag) {
 		textVisible = flag;
 	}
@@ -82,10 +88,20 @@ public class LillyPad extends Entity {
 	public void draw(Canvas canvas) {
 		super.draw(canvas);
 		if (this.isTextVisible()) {
-			canvas.translate(x, y);
-			layout.draw(canvas);
-			canvas.translate(-x, -y);
+			if (width > 100) {
+				canvas.translate(x + 50, y + 30);
+				layout.draw(canvas);
+				canvas.translate(-x - 50, -y - 30);
+			} else {
+				canvas.translate(x, y);
+				layout.draw(canvas);
+				canvas.translate(-x, -y);
+			}
 		}
+	}
+
+	public boolean inRow(int qNum) {
+		return qNum == rowNum;
 	}
 
 }

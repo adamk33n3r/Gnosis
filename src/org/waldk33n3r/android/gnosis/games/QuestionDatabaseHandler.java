@@ -42,7 +42,7 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 		db.execSQL(CREATE_QUESTIONS_TABLE);
 
 //		Log.e("DB", "Adding first question");
-		addQuestion(db, new Question("Who was Jesus mother?", "Mary", "Martha", "Ruth", "Diana"));
+		addQuestion(db, new Question("Who was Jesus' mother?", "Mary", "Martha", "Ruth", "Diana"));
 //		Log.e("DB", "Created db successfully");
 		addQuestion(db, new Question("What was the name of the garden where Adam and Eve lived?", "Garden of Eden", "Garden of the Gods",
 				"Garden of Gethsemane", "Hanging Gardens"));

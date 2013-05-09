@@ -24,6 +24,7 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 public class GameView extends View {
 
@@ -43,6 +44,7 @@ public class GameView extends View {
 
 	private LillyPad frogLoc;
 	private LillyPad logLilly;
+	private LillyPad startLilly;
 
 	private ArrayList<LillyPad> lillies;
 
@@ -53,6 +55,8 @@ public class GameView extends View {
 	private String[] strings;
 
 	private int qNum;
+	private int y;
+	private int curLevel;
 	private Question curQ;
 	ArrayList<Question> questions;
 
@@ -61,6 +65,7 @@ public class GameView extends View {
 	QuestionDatabaseHandler db;
 
 	Display display;
+	private boolean nextScreen ;
 
 	public GameView(Context context) {
 		super(context);
@@ -70,37 +75,41 @@ public class GameView extends View {
 		textPaint = new TextPaint();
 		textPaint.setColor(Color.YELLOW);
 		lillyImg = BitmapFactory.decodeResource(getResources(), R.drawable.lily_pad2_trans);
+//		lillyImg = Bitmap.createScaledBitmap(tmp, (int) (tmp.getWidth() * ((float) display.getWidth() / 300)), (int) (tmp.getHeight() * ((float) display.getHeight() / 1200)), true);
 		frog = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.sitting_frog_trans), 100, 100, true);
 		frogJump = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.jumping_frog_trans), 100, 120, true);
 		Bitmap tmp = BitmapFactory.decodeResource(getResources(), R.drawable.log_trans);
-		log = Bitmap.createScaledBitmap(tmp, display.getWidth(), tmp.getHeight(), true);
+		Log.w("dafdsF",display.getWidth()+" " + lillyImg.getWidth());
+		log = Bitmap.createScaledBitmap(tmp, display.getWidth(), (int) (tmp.getHeight() * ((float)display.getHeight()/ 1200)), true);
 		rand = new Random();
 		// Log.e("DB","Getting handler");
 		db = new QuestionDatabaseHandler(getContext());
 		// Log.e("Question count", "" + db.getQuestionsCount());
 		lillies = new ArrayList<LillyPad>();
 		init();
-		Timer timer = new Timer(100, true, new Executable() {
-
-			@Override
-			public void exec(Object... obj) {
-				((View) obj[0]).post(new Runnable() {
-					@Override
-					public void run() {
-						invalidate();
-					}
-				});
-			}
-
-		}, this);
-		timer.start();
+//		Timer timer = new Timer(10, true, new Executable() {
+//
+//			@Override
+//			public void exec(Object... obj) {
+//				((View) obj[0]).post(new Runnable() {
+//					@Override
+//					public void run() {
+//						invalidate();
+//					}
+//				});
+//			}
+//
+//		}, this);
+		// timer.start();
 	}
 
 	private void init() {
 		questions = new ArrayList<Question>();
-		frogLoc = new LillyPad("", 0, (display.getWidth() - frog.getWidth()) / 2, (display.getHeight() - log.getHeight()) + log.getHeight()
-				/ 2 - frog.getHeight() / 2, 100, 100, lillyImg);
-		logLilly = new LillyPad("", 0, 0, 0, display.getWidth(), 150, lillyImg);
+		startLilly = new LillyPad("", 0, 0, (display.getWidth() - frog.getWidth()) / 2, (display.getHeight() - log.getHeight())
+					+ log.getHeight() / 2 - frog.getHeight() / 2, 100, 100, -1, lillyImg);
+		frogLoc = startLilly;
+		logLilly = new LillyPad("", 0, 0, 0, 0, display.getWidth(), 150, 5, lillyImg);
+		logLilly.setVisible(false);
 		for (Question question : db.getAllQuestions()) {
 			questions.add(question);
 		}
@@ -110,128 +119,38 @@ public class GameView extends View {
 	private void build() {
 		if (field != null) {
 			curQ = questions.get(qNum);
-			field.rows.get(qNum - 1).clearText();
+			field.showAll();
+			field.rows.get(qNum - (curLevel * 5 + 1)).clearText();
+			logLilly.setText(curQ.getBody());
 			qNum++;
 		} else {
-			curQ = questions.get(0);
+			qNum = curLevel * 5;
+			curQ = questions.get(qNum);
+			logLilly.setText(curQ.getBody());
 			Question cur = curQ;
-			int[] dirs = new int[4];
+			int[] dirs = new int[5];
 			dirs[0] = rand.nextInt(2);
 			dirs[1] = rand.nextInt(2);
 			dirs[2] = rand.nextInt(2);
 			dirs[3] = rand.nextInt(2);
+			dirs[4] = rand.nextInt(2);
 			field = new LillyField();
 			int dx = display.getWidth() / 4;
-			int y = display.getHeight() - 200;
+			int x = 0;
+			int y = display.getHeight() - 250;
+			int speed, size = (int) (100 * ((float)display.getWidth() / 800));
 			for (int i = 0; i < dirs.length; i++) {
-				field.add(new LillyRow(new LillyPad(cur.getAnswer(), dirs[i], 0, y, 100, 100, lillyImg), new LillyPad(cur.getOption1(),
-						dirs[i], dx, y, 100, 100, lillyImg), new LillyPad(cur.getOption2(), dirs[i], dx * 2, y, 100, 100, lillyImg),
-						new LillyPad(cur.getOption3(), dirs[i], dx * 3, y, 100, 100, lillyImg)));
+				speed = rand.nextInt(8) + 2;
+				field.add(new LillyRow(new LillyPad(cur.getAnswer(), speed, dirs[i], x + rand.nextInt(100), y, size, size, i, lillyImg),
+						new LillyPad(cur.getOption1(), speed, dirs[i], x + dx + rand.nextInt(100), y, size, size, i, lillyImg), new LillyPad(
+								cur.getOption2(), speed, dirs[i], x + dx * 2 + rand.nextInt(100), y, size, size, i, lillyImg), new LillyPad(
+								cur.getOption3(), speed, dirs[i], x + dx * 3 + rand.nextInt(100), y, size, size, i, lillyImg)));
 				y -= 200;
-				cur = questions.get(i + 1);
-			}qNum++;
-		}
-		textPaint.setTextSize(36 / (this.curQ.getBody().length() > 500 ? 2 : 1));
-		layout = new StaticLayout(this.curQ.getBody(), 0, this.curQ.getBody().length(), textPaint, log.getWidth(), Alignment.ALIGN_CENTER,
-				1f, 1f, false);
-	}
-
-	private void buildRand() {
-		if (lillies.size() > 0) {
-			curQ = questions.get(qNum);
-			Log.e("New Question", curQ.getAnswer());
-			if (qNum % 2 == 0) { // If even: means it is 2nd question, 4th,
-									// etc...
-				lillies.get(4).setText(curQ.getAnswer());
-				lillies.get(5).setText(curQ.getOption1());
-				lillies.get(6).setText(curQ.getOption2());
-				lillies.get(7).setText(curQ.getOption3());
-			} else {
-				lillies.get(0).setText(curQ.getAnswer());
-				lillies.get(1).setText(curQ.getOption1());
-				lillies.get(2).setText(curQ.getOption2());
-				lillies.get(3).setText(curQ.getOption3());
+				cur = questions.get(qNum + i + 1);
+				x = rand.nextInt(display.getWidth() - 100);
 			}
-		} else {
-			curQ = questions.get(0);
-			int dir1 = rand.nextInt(2);
-			int dir2 = rand.nextInt(2);
-			int dir3 = rand.nextInt(2);
-			int dir4 = rand.nextInt(2);
-			// Log.e("Question List",questions.toString());
-			int lillyCount = 0;
-			while (lillies.size() < 8) {
-				// for (int i = 0; i < rand.nextInt(40) + 20; i++) { // Random
-				// amount
-				int size = 100;
-				float x = (rand.nextInt(display.getWidth()));
-				float y = rand.nextInt(4) * 200 + display.getHeight() - 1000;
-
-				String text = null;
-				if (lillyCount < 4) {
-					switch (lillyCount) {
-						case 0:
-							text = questions.get(qNum).getAnswer();
-							break;
-						case 1:
-							text = questions.get(qNum).getOption1();
-							break;
-						case 2:
-							text = questions.get(qNum).getOption2();
-							break;
-						case 3:
-							text = questions.get(qNum).getOption3();
-							break;
-					}
-				} else {
-					switch (lillyCount) {
-						case 4:
-							text = questions.get(qNum + 1).getAnswer();
-							break;
-						case 5:
-							text = questions.get(qNum + 1).getOption1();
-							break;
-						case 6:
-							text = questions.get(qNum + 1).getOption2();
-							break;
-						case 7:
-							text = questions.get(qNum + 1).getOption3();
-							break;
-					}
-				}
-				// if (text.length() > 12)
-				// size += 100;
-
-				// Check if this lillypad intersects any others
-				boolean intersects = false;
-				for (Iterator<LillyPad> it = lillies.iterator(); it.hasNext();) {
-					LillyPad lilly = it.next();
-					RectF newRect = new RectF(x, y, x + size, y + size);
-					intersects = RectF.intersects(lilly.getRectF(), newRect);
-					if (intersects)
-						break;
-				}
-				if (!intersects) {
-
-					int dir;
-					int row = (int) ((y - 20) / 200);
-					if (row == 1)
-						dir = dir1;
-					else if (row == 2)
-						dir = dir2;
-					else if (row == 3)
-						dir = dir3;
-					else
-						dir = dir4;
-
-					lillyCount++;
-					// Log.e("adsfadsfasdf",lillyCount+" "+text);
-
-					lillies.add(new LillyPad(text, dir, x, y, size, size, lillyImg));
-				}
-			}
+			qNum++;
 		}
-		qNum++;
 		textPaint.setTextSize(36 / (this.curQ.getBody().length() > 500 ? 2 : 1));
 		layout = new StaticLayout(this.curQ.getBody(), 0, this.curQ.getBody().length(), textPaint, log.getWidth(), Alignment.ALIGN_CENTER,
 				1f, 1f, false);
@@ -240,7 +159,17 @@ public class GameView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-
+		if(nextScreen)
+			y+=30;
+		if (y > display.getHeight() - log.getHeight()) {
+			nextScreen = false;
+			y = 0;
+			frogLoc = startLilly;
+			curLevel++;
+			field = null;
+			build();
+		}
+		canvas.translate(0, y);
 		paint.setColor(Color.BLUE);
 		canvas.drawPaint(paint);
 
@@ -254,21 +183,18 @@ public class GameView extends View {
 		// lilly.draw(canvas);
 		// }
 
+		canvas.drawBitmap(log, 0, canvas.getHeight() - log.getHeight(), null);
+		logLilly.draw(canvas);
 		for (LillyRow row : field.rows)
 			for (LillyPad pad : row.lillies) {
-				pad.move(this, 5);
+				pad.move(this, pad.speed);
 				pad.draw(canvas);
 			}
 
-		paint.setColor(Color.rgb(139, 69, 19));
-
-		// Start log
-		canvas.drawBitmap(log, 0, canvas.getHeight() - log.getHeight(), null);
+		// Draw frog
 		canvas.drawBitmap(curFrogState == FrogState.SIT ? frog : frogJump, frogLoc.x + frogLoc.width / 2 - frog.getWidth() / 2, frogLoc.y,
 				null);
-		canvas.translate(0, log.getHeight() / 2);
-		layout.draw(canvas);
-		canvas.translate(0, -log.getHeight() / 2);
+		this.invalidate();
 
 	}
 
@@ -280,19 +206,27 @@ public class GameView extends View {
 			for (LillyRow row : field.rows)
 				for (LillyPad lilly : row.lillies) {
 					if (new RectF(lilly.getRectF()).contains(event.getX(), event.getY())) {
-						Log.w("Touch Event", "Lilly pad touched");
-						if (curQ.getAnswer() != lilly.text) {
-							lilly.setVisible(false);
-							lilly.setTextVisible(false);
-						} else {
-							frogLoc = lilly;
+//						Log.w("Touch Event", "Lilly pad touched");
+						if (lilly.inRow(qNum - (5 * curLevel + 1))) {
+							if (curQ.getAnswer() != lilly.text) {
+								lilly.setVisible(false);
+								lilly.setTextVisible(false);
+								Toast.makeText(getContext(), "You perished in the depths", Toast.LENGTH_SHORT).show();
+								frogLoc = startLilly;
+								field = null;
+							} else
+								frogLoc = lilly;
 							build();
 						}
 						break;
 					}
 				}
-			if (new RectF(logLilly.getRectF()).contains(event.getX(), event.getY())) {
-				frogLoc = logLilly;
+			if (qNum == 5 * (curLevel + 1) + 1) {
+				logLilly.setText("");
+				if (new RectF(logLilly.getRectF()).contains(event.getX(), event.getY())) {
+					frogLoc = logLilly;
+					nextScreen = true;
+				}
 			}
 		}
 		return true;
