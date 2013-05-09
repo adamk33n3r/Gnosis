@@ -46,6 +46,8 @@ public class GameView extends View {
 
 	private ArrayList<LillyPad> lillies;
 
+	private LillyField field;
+
 	private Random rand;
 
 	private String[] strings;
@@ -53,7 +55,7 @@ public class GameView extends View {
 	private int qNum;
 	private Question curQ;
 	ArrayList<Question> questions;
-	
+
 	StaticLayout layout;
 
 	QuestionDatabaseHandler db;
@@ -106,10 +108,40 @@ public class GameView extends View {
 	}
 
 	private void build() {
+		if (field != null) {
+			curQ = questions.get(qNum);
+			field.rows.get(qNum - 1).clearText();
+			qNum++;
+		} else {
+			curQ = questions.get(0);
+			Question cur = curQ;
+			int[] dirs = new int[4];
+			dirs[0] = rand.nextInt(2);
+			dirs[1] = rand.nextInt(2);
+			dirs[2] = rand.nextInt(2);
+			dirs[3] = rand.nextInt(2);
+			field = new LillyField();
+			int dx = display.getWidth() / 4;
+			int y = display.getHeight() - 200;
+			for (int i = 0; i < dirs.length; i++) {
+				field.add(new LillyRow(new LillyPad(cur.getAnswer(), dirs[i], 0, y, 100, 100, lillyImg), new LillyPad(cur.getOption1(),
+						dirs[i], dx, y, 100, 100, lillyImg), new LillyPad(cur.getOption2(), dirs[i], dx * 2, y, 100, 100, lillyImg),
+						new LillyPad(cur.getOption3(), dirs[i], dx * 3, y, 100, 100, lillyImg)));
+				y -= 200;
+				cur = questions.get(i + 1);
+			}qNum++;
+		}
+		textPaint.setTextSize(36 / (this.curQ.getBody().length() > 500 ? 2 : 1));
+		layout = new StaticLayout(this.curQ.getBody(), 0, this.curQ.getBody().length(), textPaint, log.getWidth(), Alignment.ALIGN_CENTER,
+				1f, 1f, false);
+	}
+
+	private void buildRand() {
 		if (lillies.size() > 0) {
 			curQ = questions.get(qNum);
-			Log.e("New Question",curQ.getAnswer());
-			if (qNum % 2 == 0) { // If even: means it is 2nd question, 4th, etc...
+			Log.e("New Question", curQ.getAnswer());
+			if (qNum % 2 == 0) { // If even: means it is 2nd question, 4th,
+									// etc...
 				lillies.get(4).setText(curQ.getAnswer());
 				lillies.get(5).setText(curQ.getOption1());
 				lillies.get(6).setText(curQ.getOption2());
@@ -201,7 +233,8 @@ public class GameView extends View {
 		}
 		qNum++;
 		textPaint.setTextSize(36 / (this.curQ.getBody().length() > 500 ? 2 : 1));
-		layout = new StaticLayout(this.curQ.getBody(), 0, this.curQ.getBody().length(), textPaint, log.getWidth(), Alignment.ALIGN_CENTER, 1f, 1f, false);
+		layout = new StaticLayout(this.curQ.getBody(), 0, this.curQ.getBody().length(), textPaint, log.getWidth(), Alignment.ALIGN_CENTER,
+				1f, 1f, false);
 	}
 
 	@Override
@@ -215,13 +248,20 @@ public class GameView extends View {
 		canvas.drawBitmap(log, 0, 0, null);
 		paint.setColor(Color.YELLOW);
 
-		for (Iterator<LillyPad> it = lillies.iterator(); it.hasNext();) {
-			LillyPad lilly = it.next();
-			lilly.move(this, 5);
-			lilly.draw(canvas);
-		}
+		// for (Iterator<LillyPad> it = lillies.iterator(); it.hasNext();) {
+		// LillyPad lilly = it.next();
+		// lilly.move(this, 5);
+		// lilly.draw(canvas);
+		// }
+
+		for (LillyRow row : field.rows)
+			for (LillyPad pad : row.lillies) {
+				pad.move(this, 5);
+				pad.draw(canvas);
+			}
+
 		paint.setColor(Color.rgb(139, 69, 19));
-		
+
 		// Start log
 		canvas.drawBitmap(log, 0, canvas.getHeight() - log.getHeight(), null);
 		canvas.drawBitmap(curFrogState == FrogState.SIT ? frog : frogJump, frogLoc.x + frogLoc.width / 2 - frog.getWidth() / 2, frogLoc.y,
@@ -237,20 +277,20 @@ public class GameView extends View {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			// Log.w("Touch Event", String.format("Touched at %s, %s",
 			// event.getX(), event.getY()));
-			for (Iterator<LillyPad> it = this.lillies.iterator(); it.hasNext();) {
-				LillyPad lilly = it.next();
-				if (new RectF(lilly.getRectF()).contains(event.getX(), event.getY())) {
-					Log.w("Touch Event", "Lilly pad touched");
-					if (curQ.getAnswer() != lilly.text) {
-						lilly.setVisible(false);
-						lilly.setTextVisible(false);
-					} else {
-						frogLoc = lilly;
-						build();
+			for (LillyRow row : field.rows)
+				for (LillyPad lilly : row.lillies) {
+					if (new RectF(lilly.getRectF()).contains(event.getX(), event.getY())) {
+						Log.w("Touch Event", "Lilly pad touched");
+						if (curQ.getAnswer() != lilly.text) {
+							lilly.setVisible(false);
+							lilly.setTextVisible(false);
+						} else {
+							frogLoc = lilly;
+							build();
+						}
+						break;
 					}
-					break;
 				}
-			}
 			if (new RectF(logLilly.getRectF()).contains(event.getX(), event.getY())) {
 				frogLoc = logLilly;
 			}

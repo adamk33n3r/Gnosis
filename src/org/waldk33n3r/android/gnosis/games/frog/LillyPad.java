@@ -5,7 +5,6 @@ import org.waldk33n3r.android.gnosis.games.Entity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.text.Layout.Alignment;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -87,7 +86,6 @@ public class LillyPad extends Entity {
 			layout.draw(canvas);
 			canvas.translate(-x, -y);
 		}
-		// canvas.drawText(text, x, y + height / 2, paint);
 	}
 
 }
