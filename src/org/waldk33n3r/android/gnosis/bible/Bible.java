@@ -41,6 +41,7 @@ public class Bible extends ListActivity {
 		//ArrayAdapter<String> new_adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,allChapters);
 		Bundle b = new Bundle();
 		b.putStringArray("array", allChapters);
+		b.putString("book", allBooks[position]);
 		Intent i = new Intent(this, BibleChapters.class);
 		i.putExtras(b);
 		startActivity(i);

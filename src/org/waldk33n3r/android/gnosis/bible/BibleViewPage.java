@@ -6,8 +6,10 @@ import org.waldk33n3r.android.gnosis.R.menu;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.view.Menu;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
@@ -23,12 +25,25 @@ public class BibleViewPage extends Activity {
 	        setContentView(R.layout.bible_view_page);
 	        View linearLayout =  findViewById(R.id.info);
 	        //LinearLayout layout = (LinearLayout) findViewById(R.id.info);
+	        
+	        String book = this.getIntent().getExtras().getString("book");
+	        int chapterNum = this.getIntent().getExtras().getInt("chapter");
+	        TextView valueTV = new TextView(this);
+	        valueTV.setText(book + " " + String.valueOf(chapterNum) );
+	        valueTV.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+	        valueTV.setTypeface(null, Typeface.BOLD);
+	        valueTV.setId(5);
+	        valueTV.setTextSize(29);
+	        valueTV.setPadding(0, 0, 0, 0);
+	        valueTV.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+	        
+	        ((LinearLayout) linearLayout).addView(valueTV);
 
 	        for(int i=0;i<allVerses.length;i++){
-	        	TextView valueTV = new TextView(this);
+	        	valueTV = new TextView(this);
 		        valueTV.setText(String.valueOf(i+1) + " " + allVerses[i]);
-		        valueTV.setId(i+5);
-		        valueTV.setTextSize(16);
+		        valueTV.setId(i+6);
+		        valueTV.setTextSize(20);
 		        valueTV.setPadding(0, 0, 0, 0);
 		        valueTV.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 
