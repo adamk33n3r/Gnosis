@@ -84,6 +84,10 @@
             android:name="org.waldk33n3r.android.gnosis.bible.BibleChapters"
             android:label="@string/title_activity_bible_chapters" >
         </activity>
+        <activity
+            android:name="org.waldk33n3r.android.gnosis.bible.BibleViewPage"
+            android:label="@string/title_activity_bible_view_page" >
+        </activity>
     </application>
 
 </manifest>

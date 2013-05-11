@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,12 +32,11 @@ public class BibleChapters extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		String [] junk = {"junk","stuff"};
-		if(position == 0){
-			adapter = new ArrayAdapter<String>(this,
-					android.R.layout.simple_list_item_1, gen1verses);
-			setListAdapter(adapter);
-		}
+			Bundle b = new Bundle();
+			b.putStringArray("array", gen1verses);
+			Intent i = new Intent(this, BibleViewPage.class);
+			i.putExtras(b);
+			startActivity(i);
 		/*String[] allChapters = new String[allBooksChapters[position]];
 		for(int i=0;i<allChapters.length;i++){
 			allChapters[i] = "Chapter " + String.valueOf(i+1);
