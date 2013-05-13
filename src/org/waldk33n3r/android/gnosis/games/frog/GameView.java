@@ -3,12 +3,17 @@ package org.waldk33n3r.android.gnosis.games.frog;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.logging.Level;
 
 import org.waldk33n3r.android.gnosis.R;
 import org.waldk33n3r.android.gnosis.games.Question;
 import org.waldk33n3r.android.gnosis.games.QuestionDatabaseHandler;
+import org.waldk33n3r.android.gnosis.games.User;
+import org.waldk33n3r.android.gnosis.games.UserDatabaseHandler;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -18,10 +23,12 @@ import android.graphics.RectF;
 import android.text.StaticLayout;
 import android.text.Layout.Alignment;
 import android.text.TextPaint;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class GameView extends View {
@@ -62,7 +69,8 @@ public class GameView extends View {
 
 	StaticLayout layout;
 
-	QuestionDatabaseHandler db;
+	QuestionDatabaseHandler qDB;
+	UserDatabaseHandler uDB;
 
 	Display display;
 	private boolean nextScreen;
@@ -88,7 +96,8 @@ public class GameView extends View {
 		heart = Bitmap.createScaledBitmap(tmp, hsize, hsize, true);
 		rand = new Random();
 		// Log.e("DB","Getting handler");
-		db = new QuestionDatabaseHandler(getContext());
+		qDB = new QuestionDatabaseHandler(getContext());
+		uDB = new UserDatabaseHandler(getContext());
 		// Log.e("Question count", "" + db.getQuestionsCount());
 		lillies = new ArrayList<LillyPad>();
 		init();
@@ -115,7 +124,7 @@ public class GameView extends View {
 		frogLoc = startLilly;
 		logLilly = new LillyPad("", 0, 0, 0, 0, display.getWidth(), 150, 5, lillyImg);
 		logLilly.setVisible(false);
-		for (Question question : db.getAllQuestions()) {
+		for (Question question : qDB.getAllQuestions()) {
 			questions.add(question);
 		}
 		Collections.shuffle(questions, rand);
@@ -202,11 +211,10 @@ public class GameView extends View {
 				null);
 		paint.setTextSize(36);
 		canvas.drawText("Level: " + (curLevel + 1), 60, display.getHeight() - log.getHeight() / 2, paint);
-		canvas.drawText("Lives: " /*+ lives*/, 60, display.getHeight() - log.getHeight() / 2 + 40, paint);
-		for (int i=0;i< lives;i++)
+		canvas.drawText("Lives: " /* + lives */, 60, display.getHeight() - log.getHeight() / 2 + 40, paint);
+		for (int i = 0; i < lives; i++)
 			canvas.drawBitmap(heart, 150 + i * heart.getWidth(), display.getHeight() - log.getHeight() / 2 + 15, paint);
-		
-		
+
 		this.invalidate();
 
 	}
@@ -236,6 +244,22 @@ public class GameView extends View {
 									Toast.makeText(getContext(), "You perished in the depths.", Toast.LENGTH_SHORT).show();
 							} else
 								frogLoc = lilly;
+							if (curLevel == 8) {
+								Toast.makeText(getContext(), "You win all the smarts!", Toast.LENGTH_LONG).show();
+								final EditText input = new EditText(getContext());
+								AlertDialog d = new AlertDialog.Builder(getContext()).setTitle("Delete entry").setView(input)
+										.setMessage("Enter you name for HighScores list")
+										.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(DialogInterface dialog, int which) {
+												UserDatabaseHandler.addUser(uDB.getWritableDatabase(), new User(input.getText().toString(), curLevel + 1));
+											}
+										}).setNegativeButton("Don't Save", new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(DialogInterface dialog, int which) {
+											}
+										}).show();
+							}
 							build();
 						}
 						break;

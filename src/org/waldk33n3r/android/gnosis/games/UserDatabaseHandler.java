@@ -41,7 +41,7 @@ public class UserDatabaseHandler extends SQLiteOpenHelper {
 		onCreate(db);
 	}
 	
-	public void addUser(SQLiteDatabase db, User user) {
+	public static void addUser(SQLiteDatabase db, User user) {
 
 		ContentValues values = new ContentValues();
 		values.put(KEY_USERNAME, user.getUsername());
@@ -62,7 +62,7 @@ public class UserDatabaseHandler extends SQLiteOpenHelper {
 		return user;
 		}
 	
-	public List<User> getAllUser() {
+	public List<User> getAllUsers() {
 		List<User> userList = new ArrayList<User>();
 
 		String selectQuery = "SELECT  * FROM " + TABLE_USERS;
