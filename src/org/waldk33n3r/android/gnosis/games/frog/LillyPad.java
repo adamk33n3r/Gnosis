@@ -40,7 +40,7 @@ public class LillyPad extends Entity {
 		this.dir = flowdir;
 		this.text = text;
 		this.paint = new TextPaint();
-		this.paint.setTextSize(30 * (width / 75) / (text.length() > 4 ? 2 : 1));
+		this.paint.setTextSize(15 * (width / 75));
 		this.paint.setColor(Color.YELLOW);
 		layout = new StaticLayout(this.text, 0, this.text.length(), paint, (int) width, Alignment.ALIGN_CENTER, 1f, 1f, false);
 		this.textVisible = true;
@@ -50,28 +50,28 @@ public class LillyPad extends Entity {
 	 * Move based on flow
 	 * 
 	 * @param view
-	 * @param dist
+	 * @param speed
 	 */
 
-	public void move(View view, int dist) {
+	public void move(View view, Canvas canvas) {
 		if (this.dir == 1)
-			moveRight(view, dist);
+			moveRight(view, speed);
 		else
-			moveLeft(view, dist);
+			moveLeft(view, speed);
 	}
 
-	public void moveRight(View view, int dist) {
-		float newPos = (x + dist) % view.getWidth();
+	private void moveRight(View view, float speed) {
+		float newPos = (x + speed) % view.getWidth();
 		x = newPos < x ? newPos - 100/* width */: newPos;
 	}
 
-	public void moveLeft(View view, int dist) {
-		x = x - dist < -100/* width */? view.getWidth() - dist : x - dist;
+	private void moveLeft(View view, float speed) {
+		x = x - speed < -100/* width */? view.getWidth() - speed : x - speed;
 	}
 
 	public void setText(String text) {
 		this.text = text;
-		this.paint.setTextSize(30 * (width / 75) / (text.length() > 4 ? 2 : 1));
+		this.paint.setTextSize(15 * (width / 75));
 		if (width > 100)
 			this.paint.setTextSize(36);
 		layout = new StaticLayout(this.text, paint, (int) width-50, Alignment.ALIGN_CENTER, 1f, 1f, false);

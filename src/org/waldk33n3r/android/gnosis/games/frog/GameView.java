@@ -84,7 +84,8 @@ public class GameView extends View {
 		Bitmap tmp = BitmapFactory.decodeResource(getResources(), R.drawable.log_trans);
 		log = Bitmap.createScaledBitmap(tmp, display.getWidth(), (int) (tmp.getHeight() * ((float) display.getHeight() / 1200)), true);
 		tmp = BitmapFactory.decodeResource(getResources(), R.drawable.heart);
-		heart = Bitmap.createScaledBitmap(tmp, 30, 30, true);
+		int hsize = (int) (30 * ((float) display.getHeight() / 1200));
+		heart = Bitmap.createScaledBitmap(tmp, hsize, hsize, true);
 		rand = new Random();
 		// Log.e("DB","Getting handler");
 		db = new QuestionDatabaseHandler(getContext());
@@ -145,11 +146,11 @@ public class GameView extends View {
 			int speed, size = (int) (100 * ((float) display.getWidth() / 800));
 			int y = display.getHeight() - log.getHeight() - size;
 			for (int i = 0; i < dirs.length; i++) {
-				speed = rand.nextInt(6) + 2;
-				field.add(new LillyRow(new LillyPad(cur.getAnswer(), speed, dirs[i], x + rand.nextInt(100), y, size, size, i, lillyImg),
-						new LillyPad(cur.getOption1(), speed, dirs[i], x + dx + rand.nextInt(100), y, size, size, i, lillyImg),
-						new LillyPad(cur.getOption2(), speed, dirs[i], x + dx * 2 + rand.nextInt(100), y, size, size, i, lillyImg),
-						new LillyPad(cur.getOption3(), speed, dirs[i], x + dx * 3 + rand.nextInt(100), y, size, size, i, lillyImg)));
+				speed = rand.nextInt(3) + 2;
+				field.add(new LillyRow(new LillyPad(cur.getAnswer(), speed, dirs[i], x + rand.nextInt(size), y, size, size, i, lillyImg),
+						new LillyPad(cur.getOption1(), speed, dirs[i], x + dx + rand.nextInt(size), y, size, size, i, lillyImg),
+						new LillyPad(cur.getOption2(), speed, dirs[i], x + dx * 2 + rand.nextInt(size), y, size, size, i, lillyImg),
+						new LillyPad(cur.getOption3(), speed, dirs[i], x + dx * 3 + rand.nextInt(size), y, size, size, i, lillyImg)));
 				y -= size * 2;
 				cur = questions.get(qNum + i + 1);
 				x = rand.nextInt(display.getWidth() - 100);
@@ -192,7 +193,7 @@ public class GameView extends View {
 		logLilly.draw(canvas);
 		for (LillyRow row : field.rows)
 			for (LillyPad pad : row.lillies) {
-				pad.move(this, pad.speed);
+				pad.move(this, canvas);
 				pad.draw(canvas);
 			}
 
@@ -203,7 +204,9 @@ public class GameView extends View {
 		canvas.drawText("Level: " + (curLevel + 1), 60, display.getHeight() - log.getHeight() / 2, paint);
 		canvas.drawText("Lives: " /*+ lives*/, 60, display.getHeight() - log.getHeight() / 2 + 40, paint);
 		for (int i=0;i< lives;i++)
-			canvas.drawBitmap(heart, 150 + i * 30, display.getHeight() - log.getHeight() / 2 + 15, paint);
+			canvas.drawBitmap(heart, 150 + i * heart.getWidth(), display.getHeight() - log.getHeight() / 2 + 15, paint);
+		
+		
 		this.invalidate();
 
 	}

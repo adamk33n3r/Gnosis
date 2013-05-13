@@ -100,7 +100,6 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 		addQuestion(db, new Question("Which of the gospels appears last in the Bible?", "John", "Matthew", "Mark", "Luke"));
 		addQuestion(db, new Question("What is the only sin that cannot be forgiven?", "Blasphemy against the Holy Spirit", "Murder",
 				"Adultery", "Suicide"));
-		db.close();
 	}
 
 	@Override
@@ -114,7 +113,7 @@ public class QuestionDatabaseHandler extends SQLiteOpenHelper {
 	}
 
 	// Adding new question
-	public void addQuestion(SQLiteDatabase db, Question question) {
+	public static void addQuestion(SQLiteDatabase db, Question question) {
 //		Log.e("DB", "Getting db");
 		
 		/*SQLiteDatabase db = null;
