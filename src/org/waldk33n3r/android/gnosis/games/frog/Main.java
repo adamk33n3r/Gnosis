@@ -1,6 +1,8 @@
 package org.waldk33n3r.android.gnosis.games.frog;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.waldk33n3r.android.gnosis.R;
@@ -27,30 +29,48 @@ import android.os.Build;
 
 public class Main extends Activity implements OnClickListener {
 
+	TableLayout layout;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.frog_main);
 		findViewById(R.id.frog_play_button).setOnClickListener(this);
 		findViewById(R.id.frog_back_button).setOnClickListener(this);
-		TableLayout layout = (TableLayout) findViewById(R.id.frog_scores_tablelayout);
-		
+		layout = (TableLayout) findViewById(R.id.frog_scores_tablelayout);
+
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		layout.removeAllViews();
+
 		UserDatabaseHandler db = new UserDatabaseHandler(this);
 		ArrayList<TextView> tViews = new ArrayList<TextView>();
 		TextView tView = new TextView(this);
 		tView.setText("High Scores");
 		tView.setGravity(Gravity.CENTER);
 		tView.setTextSize(30);
-		tView.setTypeface(null,Typeface.BOLD);
+		tView.setTypeface(null, Typeface.BOLD);
 		tViews.add(tView);
-		for (User user: db.getAllUsers()) {
+		List<User> list = db.getAllUsers();
+		Collections.sort(list, new Comparator<User>() {
+
+			@Override
+			public int compare(User lhs, User rhs) {
+				return rhs.getScore() - lhs.getScore();
+			}
+			
+		});
+		for (User user : list) {
 			TextView tmp = new TextView(this);
 			tmp.setText(user.getUsername() + ": " + user.getScore());
 			tmp.setGravity(Gravity.CENTER);
 			tmp.setTextSize(20);
 			tViews.add(tmp);
 		}
-		for(TextView view : tViews)
+		for (TextView view : tViews)
 			layout.addView(view);
 	}
 

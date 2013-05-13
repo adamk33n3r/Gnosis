@@ -3,7 +3,6 @@ package org.waldk33n3r.android.gnosis.games.frog;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-import java.util.logging.Level;
 
 import org.waldk33n3r.android.gnosis.R;
 import org.waldk33n3r.android.gnosis.games.Question;
@@ -11,6 +10,7 @@ import org.waldk33n3r.android.gnosis.games.QuestionDatabaseHandler;
 import org.waldk33n3r.android.gnosis.games.User;
 import org.waldk33n3r.android.gnosis.games.UserDatabaseHandler;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,7 +23,6 @@ import android.graphics.RectF;
 import android.text.StaticLayout;
 import android.text.Layout.Alignment;
 import android.text.TextPaint;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -52,13 +51,9 @@ public class GameView extends View {
 	private LillyPad logLilly;
 	private LillyPad startLilly;
 
-	private ArrayList<LillyPad> lillies;
-
 	private LillyField field;
 
 	private Random rand;
-
-	private String[] strings;
 
 	private int qNum;
 	private int y;
@@ -83,9 +78,6 @@ public class GameView extends View {
 		textPaint = new TextPaint();
 		textPaint.setColor(Color.YELLOW);
 		lillyImg = BitmapFactory.decodeResource(getResources(), R.drawable.lily_pad2_trans);
-		// lillyImg = Bitmap.createScaledBitmap(tmp, (int) (tmp.getWidth() *
-		// ((float) display.getWidth() / 300)), (int) (tmp.getHeight() *
-		// ((float) display.getHeight() / 1200)), true);
 		int fsize = (int) (100 * ((float) display.getHeight() / 1200));
 		frog = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.sitting_frog_trans), fsize, fsize, true);
 		frogJump = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.jumping_frog_trans), 100, 120, true);
@@ -95,26 +87,9 @@ public class GameView extends View {
 		int hsize = (int) (30 * ((float) display.getHeight() / 1200));
 		heart = Bitmap.createScaledBitmap(tmp, hsize, hsize, true);
 		rand = new Random();
-		// Log.e("DB","Getting handler");
 		qDB = new QuestionDatabaseHandler(getContext());
 		uDB = new UserDatabaseHandler(getContext());
-		// Log.e("Question count", "" + db.getQuestionsCount());
-		lillies = new ArrayList<LillyPad>();
 		init();
-		// Timer timer = new Timer(10, true, new Executable() {
-		//
-		// @Override
-		// public void exec(Object... obj) {
-		// ((View) obj[0]).post(new Runnable() {
-		// @Override
-		// public void run() {
-		// invalidate();
-		// }
-		// });
-		// }
-		//
-		// }, this);
-		// timer.start();
 	}
 
 	private void init() {
@@ -180,7 +155,6 @@ public class GameView extends View {
 			nextScreen = false;
 			y = 0;
 			frogLoc = startLilly;
-			curLevel++;
 			field = null;
 			build();
 		}
@@ -191,12 +165,6 @@ public class GameView extends View {
 		// Question log
 		canvas.drawBitmap(log, 0, 0, null);
 		paint.setColor(Color.YELLOW);
-
-		// for (Iterator<LillyPad> it = lillies.iterator(); it.hasNext();) {
-		// LillyPad lilly = it.next();
-		// lilly.move(this, 5);
-		// lilly.draw(canvas);
-		// }
 
 		canvas.drawBitmap(log, 0, canvas.getHeight() - log.getHeight(), null);
 		logLilly.draw(canvas);
@@ -222,12 +190,9 @@ public class GameView extends View {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			// Log.w("Touch Event", String.format("Touched at %s, %s",
-			// event.getX(), event.getY()));
 			for (LillyRow row : field.rows)
 				for (LillyPad lilly : row.lillies) {
 					if (new RectF(lilly.getRectF()).contains(event.getX(), event.getY())) {
-						// Log.w("Touch Event", "Lilly pad touched");
 						if (lilly.inRow(qNum - (5 * curLevel + 1))) {
 							if (curQ.getAnswer() != lilly.text) {
 								lilly.setVisible(false);
@@ -236,30 +201,27 @@ public class GameView extends View {
 								frogLoc = startLilly;
 								field = null;
 								if (lives == 0) {
-									qNum = 0;
-									curLevel = 0;
-									lives = 3;
-									Toast.makeText(getContext(), "You lost all of your lives. Starting over.", Toast.LENGTH_SHORT).show();
+									Toast.makeText(getContext(), "You lost all of your lives.", Toast.LENGTH_SHORT).show();
+									final EditText input = new EditText(getContext());
+									new AlertDialog.Builder(getContext()).setTitle("HighScores").setView(input)
+											.setMessage("Enter you name for HighScores list")
+											.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+												@Override
+												public void onClick(DialogInterface dialog, int which) {
+													uDB.addUser(new User(input.getText().toString(), curLevel));
+													((Activity) getContext()).onBackPressed();
+												}
+											}).setNegativeButton("Don't Save", new DialogInterface.OnClickListener() {
+												@Override
+												public void onClick(DialogInterface dialog, int which) {
+													((Activity) getContext()).onBackPressed();
+												}
+											}).show();
 								} else
 									Toast.makeText(getContext(), "You perished in the depths.", Toast.LENGTH_SHORT).show();
 							} else
 								frogLoc = lilly;
-							if (curLevel == 8) {
-								Toast.makeText(getContext(), "You win all the smarts!", Toast.LENGTH_LONG).show();
-								final EditText input = new EditText(getContext());
-								AlertDialog d = new AlertDialog.Builder(getContext()).setTitle("Delete entry").setView(input)
-										.setMessage("Enter you name for HighScores list")
-										.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-											@Override
-											public void onClick(DialogInterface dialog, int which) {
-												UserDatabaseHandler.addUser(uDB.getWritableDatabase(), new User(input.getText().toString(), curLevel + 1));
-											}
-										}).setNegativeButton("Don't Save", new DialogInterface.OnClickListener() {
-											@Override
-											public void onClick(DialogInterface dialog, int which) {
-											}
-										}).show();
-							}
+
 							build();
 						}
 						break;
@@ -268,9 +230,29 @@ public class GameView extends View {
 			if (qNum == 5 * (curLevel + 1) + 1) {
 				logLilly.setText("");
 				if (new RectF(logLilly.getRectF()).contains(event.getX(), event.getY())) {
-					frogLoc = logLilly;
-					nextScreen = true;
-					lives++;
+					curLevel++;
+					if (curLevel == 8) {
+						Toast.makeText(getContext(), "You win all the smarts!", Toast.LENGTH_LONG).show();
+						final EditText input = new EditText(getContext());
+						new AlertDialog.Builder(getContext()).setTitle("HighScores").setView(input)
+								.setMessage("Enter you name for HighScores list")
+								.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										uDB.addUser(new User(input.getText().toString(), curLevel));
+										((Activity) getContext()).onBackPressed();
+									}
+								}).setNegativeButton("Don't Save", new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										((Activity) getContext()).onBackPressed();
+									}
+								}).show();
+					} else {
+						nextScreen = true;
+						frogLoc = logLilly;
+						lives += lives < 3 ? 1 : 0;
+					}
 				}
 			}
 		}
